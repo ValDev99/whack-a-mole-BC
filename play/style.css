@@ -1021,3 +1021,31 @@ _:-ms-lang(x), .rolldown-list li {
 _:-ms-lang(x), #highscoreList {
   max-height: 39vh; 
 }
+
+/* Wallet MetaMask */
+
+.wallet-cont {
+  margin: 0 auto 1.2em;
+  text-align: center;
+}
+
+.wallet-status {
+  display: block;
+  font-size: 0.8em;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.6em;
+  word-break: break-all;
+}
+
+.wallet-on    { color: #7BE38B; }
+.wallet-off   { color: rgba(255, 255, 255, 0.6); }
+.wallet-error { color: #FF8A7A; }
+
+.btn-wallet {
+  border-color: #F6851B;
+  font-weight: 600;
+}
+.btn-wallet:active {
+  background: #F6851B;
+}

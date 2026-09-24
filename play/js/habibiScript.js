@@ -667,8 +667,15 @@ abtPageBackBtn.addEventListener('click', function() {
 
 // Game Menu Buttons
 // -- New Game Button
-newGameBtn.addEventListener('click', function() {
+newGameBtn.addEventListener('click', async function() {
   audioPool.playSound(buttonTap);
+
+  // La session doit être authentifiée sur Amoy avant de lancer une partie
+  if (!wallet.isConnected() || !wallet.isOnAmoy()) {
+    await wallet.connect();
+    if (!wallet.isConnected() || !wallet.isOnAmoy()) return; // refus, ou mauvais réseau
+  }
+
   toolsBox.showPage(pageTutorial);
   toolsBox.hidePage(pageGameMenu);
 }, false);
