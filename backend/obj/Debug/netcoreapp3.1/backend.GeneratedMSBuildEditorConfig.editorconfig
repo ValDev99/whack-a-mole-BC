@@ -1,0 +1,8 @@
+is_global = true
+build_property.RootNamespace = backend
+build_property.ProjectDir = /Users/mantle/Documents/Mantle/Whack-a-mole/backend/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.CsWinRTUseWindowsUIXamlProjections = false
+build_property.EffectiveAnalysisLevelStyle = 
+build_property.EnableCodeStyleSeverity = 

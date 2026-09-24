@@ -1,0 +1,29 @@
+{
+  "version": 2,
+  "dgSpecHash": "4b19w3b+cUc=",
+  "success": true,
+  "projectFilePath": "/Users/mantle/Documents/Mantle/Whack-a-mole/backend/backend.csproj",
+  "expectedPackageFiles": [
+    "/Users/mantle/.nuget/packages/microsoft.extensions.logging.abstractions/3.1.5/microsoft.extensions.logging.abstractions.3.1.5.nupkg.sha512",
+    "/Users/mantle/.nuget/packages/newtonsoft.json/12.0.3/newtonsoft.json.12.0.3.nupkg.sha512",
+    "/Users/mantle/.nuget/packages/restclient.net/4.0.0/restclient.net.4.0.0.nupkg.sha512",
+    "/Users/mantle/.nuget/packages/restclient.net.abstractions/4.0.0/restclient.net.abstractions.4.0.0.nupkg.sha512",
+    "/Users/mantle/.nuget/packages/microsoft.netcore.app.ref/3.1.0/microsoft.netcore.app.ref.3.1.0.nupkg.sha512",
+    "/Users/mantle/.nuget/packages/microsoft.aspnetcore.app.ref/3.1.10/microsoft.aspnetcore.app.ref.3.1.10.nupkg.sha512",
+    "/Users/mantle/.nuget/packages/microsoft.netcore.app.host.osx-x64/3.1.32/microsoft.netcore.app.host.osx-x64.3.1.32.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "message": "Package 'Newtonsoft.Json' 12.0.3 has a known high severity vulnerability, https://github.com/advisories/GHSA-5crp-9r3c-p9vr",
+      "projectPath": "/Users/mantle/Documents/Mantle/Whack-a-mole/backend/backend.csproj",
+      "warningLevel": 1,
+      "filePath": "/Users/mantle/Documents/Mantle/Whack-a-mole/backend/backend.csproj",
+      "libraryId": "Newtonsoft.Json",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.1"
+      ]
+    }
+  ]
+}
