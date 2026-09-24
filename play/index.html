@@ -114,6 +114,10 @@
 					<h1 class="gm-menu-title">Whack-a-Mole</h1>
 					<h2 class="gm-menu-subtitle">Every Tap Matters</h2>
 				</div>
+				<div class="wallet-cont">
+					<span id="walletStatus" class="wallet-status wallet-off">Aucun compte connecté</span>
+					<button id="walletBtn" class="gm-btn btn-wallet" type="button" name="button">Connecter MetaMask</button>
+				</div>
 				<button id="newGameBtn" class="gm-btn btn-blue" type="button" name="button">New Game</button>
 				<button id="highScoresBtn" class="gm-btn" type="button" name="button">High Scores</button>
 				<!-- Score Validator removed -->
@@ -273,6 +277,10 @@
 				</div>
 				<div class="info-screen-title-cont">
 					<div class="submit-info">
+						<span>Adresse : </span>
+						<span id="walletAddressGameOver" class="wallet-status wallet-off">connecte MetaMask pour jouer en Web3</span>
+					</div>
+					<div class="submit-info">
 						<span>Name: </span>
 						<input type="text" id="name" class="playerName" autofocus="autofocus"/>
 					</div>
@@ -284,6 +292,7 @@
 		</div>
 	</div>
 	<!-- logic & brain -->
+	<script src="js/wallet.js"></script>
 	<script src="js/habibiScript.js"></script>
 </body>
 </html>
