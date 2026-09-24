@@ -1049,3 +1049,12 @@ _:-ms-lang(x), #highscoreList {
 .btn-wallet:active {
   background: #F6851B;
 }
+
+.mint-link {
+  display: inline-block;
+  margin: 0 8px;
+  font-size: 0.8em;
+  color: #fff;
+  text-decoration: underline;
+}
+.mint-link:hover { color: #7BE38B; }
