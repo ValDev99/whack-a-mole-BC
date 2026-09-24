@@ -104,9 +104,19 @@ var wallet = {
 
   mintScore: async function (recipient, score) {
     if (!this.isOnAmoy()) await this.switchToAmoy();
+    var block = await window.ethereum.request({ method: "eth_getBlockByNumber", params: ["latest", false] });
+    var baseFee = BigInt(block.baseFeePerGas || "0x0");
+    var priorityFee = 30000000000n;
+    var maxFee = baseFee * 2n + priorityFee;
     return await window.ethereum.request({
       method: "eth_sendTransaction",
-      params: [{ from: this.address, to: TOKEN_ID, data: encodeMint(recipient, score) }]
+      params: [{
+        from: this.address,
+        to: TOKEN_ID,
+        data: encodeMint(recipient, score),
+        maxPriorityFeePerGas: "0x" + priorityFee.toString(16),
+        maxFeePerGas: "0x" + maxFee.toString(16)
+      }]
     });
   },
 
