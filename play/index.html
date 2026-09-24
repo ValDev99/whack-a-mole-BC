@@ -259,7 +259,9 @@
 		<!-- YOU LOST PAGE -->
 		<div id="pageYouLost" class="page-cont page-you-lost page-faded-bg anmtd-grdnt-bg rd-grdnt-bg no-bg">
 			<div class="popupInfo">
-				<p>Saving score locally...</p>
+				<!-- ici modif -->
+				<p>Envoi du score…</p>
+				<!-- jusqu'a ici modif -->
 			</div>
 			<div class="fixed-75w-wrapper">
 				<div class="info-screen-title-cont">
@@ -281,11 +283,12 @@
 						<span id="walletAddressGameOver" class="wallet-status wallet-off">connecte MetaMask pour jouer en Web3</span>
 					</div>
 					<div class="submit-info">
-						<span>Name: </span>
-						<input type="text" id="name" class="playerName" autofocus="autofocus"/>
+						<span>Mint : </span>
+						<span id="mintStatus" class="wallet-status wallet-off">—</span>
 					</div>
 					<div class="submit-info">
-						<button id="sbmt-score" class="gm-btn btn-blue" type="button" name="button">Submit score</button>
+						<a id="mintTxLink" class="mint-link" href="#" target="_blank" rel="noopener" style="display:none;">Voir la transaction</a>
+						<a id="watchTokenLink" class="mint-link" href="#" style="display:none;">Ajouter le jeton à MetaMask</a>
 					</div>
 				</div>
 			</div>

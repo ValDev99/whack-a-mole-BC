@@ -1,327 +1,301 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+	<title>[WAVESPACE]Whack-a-Mole</title>
+	<meta name="description" content="Open source tapping game built with Javascript"/>
 
-        <title>TapTapTap - Open source tapping game built with Javascript</title>
-        <meta name="description" content="Open source tapping game built with Javascript"/>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="js/RollDownList.js"></script>
 
-        <link rel="stylesheet" href="style/main.css">
-        <link href="https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700" rel="stylesheet">
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
 
-        <!-- favicon -->
-        <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
-        <link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32">
-        <link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
-        <link rel="manifest" href="/favicons/manifest.json">
-        <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#0b1d31">
-        <link rel="shortcut icon" href="/favicons/favicon.ico">
-        <meta name="msapplication-config" content="/favicons/browserconfig.xml">
-        <meta name="theme-color" content="#0b1d31">
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
 
-        <!-- OG Details -->
-        <meta property="og:title" content="TapTapTap" />
-        <meta property="og:description" content="Open source tapping game built with Javascript" />
-        <meta property="og:site_name" content="TapTapTap - Open source tapping game built with Javascript" />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://taptaptap.click/" />
-        <meta property="og:image" content="https://taptaptap.click/images/im-og_image.png" />
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+	
+	<!-- Latest compiled and minified ContextMenu -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.ui.position.js"></script>
 
-        <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-3416596-20"></script>
-        <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
+	<link href="style.css" rel="stylesheet">
+	<link href="all.min.css" rel="stylesheet">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+	<meta name="HandheldFriendly" content="true"/>
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600" rel="stylesheet">
 
-        gtag('config', 'UA-3416596-20');
-        </script>
-    </head>
-    <body>
-        <div class="section-container section-home">
-            <div class="section-wrapper home-section-wrapper">
-                <div class="logo-container">
-                    <div class="logo"></div>
-                    <div class="pulsing-circle"></div>
-                </div>
-                <h2 class="home-subtitle">Open source tapping game built with Javascript</h2>
-                <div class="btns-container">
-                    <a class="btn btn-pink" href="/play/">Play</a>
-                    <a class="btn btn-outline" href="https://github.com/MahdiF/taptaptap">View on GitHub</a>
-                </div>
-                <div class="screenshots-container">
-                    <div class="desktop-screenshot">
-                        <div class="mobile-screenshot"></div>
-                    </div>
-                </div>
-                <a href="#about" class="arrow-down-container"></a>
-            </div>
-        </div>
-        <!-- <nav class="menu-container">
-        <ul class="menu">
-            <li class="menu-item"><a class="menu_item_link" href="">Home</a></li>
-            <li class="menu-item menu-item--selected"><a class="menu_item_link" href="">About</a></li>
-            <li class="menu-item"><a class="menu_item_link" href="">Timeline</a></li>
-            <li class="menu-item"><a class="menu_item_link" href="">Credits</a></li>
-        </ul>
-        </nav> -->
-        <div id="about" class="section-container section-about">
-            <div class="section-wrapper">
-                <h2 class="section-title">About</h2> 
-                <div class="about-container">
-                    <p class="about-text">
-                        After 6 months of hard work applying everything I’ve learned in Javascript, I present to you this simple game that works perfectly on both mobile phones and desktop browsers.
-                        And of course, I’m sharing the source code with everyone hoping it’d help someone learn more Javascript.
-                        <br><br>
-                        Yours,<br>
-                        Mahdi
-                    </p>
-                    <div class="short-bio-container">
-                        <div class="bio-avatar"><img src="images/avatar-mahdi-alfarra.jpg" alt=""></div>
-                        <div class="bio">
-                            <h3 class="bio-title">Mahdi Farra</h3>
-                            <h4 class="bio-tag-line">Senior Product Designer based in California, USA.</h4>
-                            <p class="bio-links">
-                                Check my <a href="https://mahdif.com/">website</a>, and follow me on <a href="https://twitter.com/mahdif">Twitter</a>.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="section-container section-timeline">
-            <div class="section-wrapper timeline-section-wrapper">
-                <h2 class="section-title">Timeline</h2>
-                <div class="timeline_cards_container">
-                    <div class="timeline_card">
-                        <a href="https://www.google.com/maps/place/Amman,+Jordan/@31.8357604,35.9476308,10z/data=!3m1!4b1!4m5!3m4!1s0x151b5fb85d7981af:0x631c30c0f8dc65e8!8m2!3d31.9453666!4d35.9283716?hl=en" target="_blank" class="timeline_card_image_container"><img src="images/timeline-images/jordan-map.png" alt="" class="timeline_card_image"></a>
-                        <div class="timeline_card_content">
-                            <h4 class="timeline_card_title">Main Idea</h4>
-                            <p class="timeline_card_text">The main idea came to me when I was on vacation in Jordan.</p>
-                            <p class="timeline_card_comment">No. They don’t ride camels for work.</p>
-                        </div>
-                    </div>
-                    <div class="timeline_card">
-                        <a target="_blank" class="timeline_card_image_container"><img src="images/timeline-images/tiny-project-code.png" alt="" class="timeline_card_image"></a>
-                        <div class="timeline_card_content">
-                            <h4 class="timeline_card_title">Tiny Project</h4>
-                            <p class="timeline_card_text">I wanted to make a tiny project to prove that I’ve learned something in Javascript.</p>
-                            <p class="timeline_card_comment">I’m doing something with my life. Finally.</p>
-                        </div>
-                    </div>
-                    <div class="timeline_card">
-                        <a target="_blank" class="timeline_card_image_container"><img src="images/timeline-images/my-friend-amr.png" alt="" class="timeline_card_image"></a>
-                        <div class="timeline_card_content">
-                            <h4 class="timeline_card_title">My Childhood Friend Loved My Idea!</h4>
-                            <p class="timeline_card_text">While I was in Jordan, I went out to see my childhood friend, Amr. I told him about a stupid idea for a game.
-Amr loved the idea! And that’s when I decided I should go ahead and work on it!</p>
-                            <p class="timeline_card_comment">I know. Amr looks like Pitbull in this photo.</p>
-                        </div>
-                    </div>
-                    <div class="timeline_card">
-                        <a target="_blank" class="timeline_card_image_container"><img src="images/timeline-images/whac-a-mole-game.png" alt="" class="timeline_card_image"></a>
-                        <div class="timeline_card_content">
-                            <h4 class="timeline_card_title">Whac-A-Mole</h4>
-                            <p class="timeline_card_text">The idea was a simple tiny game,very similar to the famous <a href="https://en.wikipedia.org/wiki/Whac-A-Mole" class="timeline_card_link">Whac-A-Mole</a> game. The main difference is that my game will use Emoji’s instead of moles.</p>
-                            <p class="timeline_card_comment">Wow! Such Genius! Much Smartness! Cool!</p>
-                        </div>
-                    </div>
-                    <div class="timeline_card">
-                        <a class="timeline_card_image_container"><img src="images/timeline-images/first-proof-of-concept.png" alt="" class="timeline_card_image"></a>
-                        <div class="timeline_card_content">
-                            <h4 class="timeline_card_title">Proof of Concept</h4>
-                            <p class="timeline_card_text">I wanted to make a small project to prove to myself that it’s doable in Javascript.</p>
-                            <a href="/prototypes/1_poc/" class="timeline_card_btn">First proof of concept</a>
-                        </div>
-                    </div>
-                    <div class="timeline_card">
-                        <a class="timeline_card_image_container"><img src="images/timeline-images/responsive-love.png" alt="" class="timeline_card_image"></a>
-                        <div class="timeline_card_content">
-                            <h4 class="timeline_card_title">Responsive Love</h4>
-                            <p class="timeline_card_text">After I managed to make the first proof of concept, I decided to try making it responsive to test it on my mobile phone.</p>
-                            <a href="/prototypes/2_poc_responsive_love/" class="timeline_card_btn">First responsive proof of concept</a>
-                            <p class="timeline_card_comment">Mobile first they say. I say second, third… do whatever is easier for you.</p>
-                        </div>
-                    </div>
-                    <p class="timeline_inline_paragraph">💩 It’s going to get very technical from here on. Run if you’re not a nerd.</p>
-                    <div class="timeline_card">
-                        <a class="timeline_card_image_container"><img src="images/timeline-images/replacing-emojis-with-images.png" alt="" class="timeline_card_image"></a>
-                        <div class="timeline_card_content">
-                            <h4 class="timeline_card_title">Emoji’s Photos &amp; Random Sounds</h4>
-                            <p class="timeline_card_text">I was using regluar emoji characters, and these have unpredictable width and height, so I though I’d better use images instead. I also tried spicing things up by making the clicking sound change everytime you click on an emoji!</p>
-                            <a href="/prototypes/3_poc_emoji_images_random_sounds/" class="timeline_card_btn">Images for emoji’s prototype</a>
-                        </div>
-                    </div>
-                    <div class="timeline_card">
-                        <a class="timeline_card_image_container"><img src="images/timeline-images/catch-the-emojis.png" alt="" class="timeline_card_image"></a>
-                        <div class="timeline_card_content">
-                            <h4 class="timeline_card_title">Catch the Emojis</h4>
-                            <p class="timeline_card_text">After doing a lot of expermients I thought it’s time to give that game a name and a better user interface.</p>
-                            <a href="/prototypes/4_poc_catch_the_emojis/" class="timeline_card_btn">Play Catch the Emojis</a>
-                            <p class="timeline_card_comment">I know! That neon red is ridiculous. I mean awesome.</p>
-                        </div>
-                    </div>
-                    <div class="timeline_card">
-                        <a class="timeline_card_image_container"><img src="images/timeline-images/sound-pool.png" alt="" class="timeline_card_image"></a>
-                        <div class="timeline_card_content">
-                            <h4 class="timeline_card_title">Sound Pool</h4>
-                            <p class="timeline_card_text">The game of course, has to have some sound effects.<br>
-                                <br>
-                                I managed to get one sound to play at a time, but I needed to be able play multiple sounds at the same time, so I had to program my own audio pool.</p>
-                            <a href="/prototypes/5_poc_sound_pool/" class="timeline_card_btn">Sound Pool Proof of Concept</a>
-                        </div>
-                    </div>
-                    <div class="timeline_card">
-                        <a class="timeline_card_image_container"><img src="images/timeline-images/end-of-catch-the-emojis.png" alt="" class="timeline_card_image"></a>
-                        <div class="timeline_card_content">
-                            <h4 class="timeline_card_title">The End of Catch the Emojis!</h4>
-                            <p class="timeline_card_text">I finally implemented the sound pool, and also made it super easy to   a new level. <br>And that was the final version of Catch the Emojis!</p>
-                            <a href="/prototypes/6_poc_catch_the_emojis_finale/" class="timeline_card_btn">Play Catch the Emojis 2</a>
-                        </div>
-                    </div>
-                    <div class="timeline_card">
-                        <a class="timeline_card_image_container"><img src="images/timeline-images/mahdi-hates-the-game.png" alt="" class="timeline_card_image"></a>
-                        <div class="timeline_card_content">
-                            <h4 class="timeline_card_title">I Hate It!</h4>
-                            <p class="timeline_card_text">I woke up a few days after finishing that game with a weird feeling. I hated it. I hated everything about.<br>
-                                <br>
-                                I asked a few people to try playing the game, and I noticed that I made a lot of mistakes.<br>
-                                The interface wasn’t intuitive, and my Javascript code wasn’t the best either.<br>
-                                <br>
-                                I had to do something about it.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="timeline_card">
-                        <a class="timeline_card_image_container"><img src="images/timeline-images/new-game-tap-tap-tap.png" alt="" class="timeline_card_image"></a>
-                        <div class="timeline_card_content">
-                            <h4 class="timeline_card_title">New Game!</h4>
-                            <p class="timeline_card_text">I decided that the new game is going to be very similar to the old one, but with a little bit more logic in it.<br>
-                                <br>
-                                I wanted to make something more challenging, and more fun to play.
-                            </p>
-                            <a href="/prototypes/7_taptaptap_design.png" class="timeline_card_btn">See the new design artboards</a>
-                        </div>
-                    </div>
-                    <div class="timeline_card">
-                        <a class="timeline_card_image_container"><img src="images/timeline-images/debugging-control-panel.png" alt="" class="timeline_card_image"></a>
-                        <div class="timeline_card_content">
-                            <h4 class="timeline_card_title">Debugging Panel</h4>
-                            <p class="timeline_card_text">This time, I decided to take things a bit more serious. I created a simpel debugging panel to help me show/hide the pages real quick which made my life 10 times better when I'm debugging a sprcific page.</p>
-                            <a href="/prototypes/8_debugging_panel/" class="timeline_card_btn">Try the control panel</a>
-                        </div>
-                    </div>
-                    <div class="timeline_card">
-                        <a class="timeline_card_image_container"><img src="images/timeline-images/tap-tap-tap-game-animation.gif" alt="" class="timeline_card_image"></a>
-                        <div class="timeline_card_content">
-                            <h4 class="timeline_card_title">Animation</h4>
-                            <p class="timeline_card_text">I wanted this version of the game to have a better animation, so I’ve used a lot of CSS3 animation with Javascript to control it.<br>
-                                <br>
-                                I tried designing and animating the blue circle first, and I wanted to do that the simplest way possible using a single div element!
-                            </p>
-                            <a href="https://codepen.io/mahdi/pen/kXzQRk" class="timeline_card_btn">See the circles I’ve made on Codepen</a>
-                        </div>
-                    </div>
-                    <div class="timeline_card">
-                        <a class="timeline_card_image_container"><img src="images/timeline-images/dj-mahdi-al-farra.png" alt="" class="timeline_card_image"></a>
-                        <div class="timeline_card_content">
-                            <h4 class="timeline_card_title">Sound Effects</h4>
-                            <p class="timeline_card_text">I spent sometime to choosing the right sound effects because I know that they’ll compliment the interface if they were choosen right.</p>
-                            <p class="timeline_card_comment">DJ Mahdi van Buuren. Such a multi-talents guy.</p>
-                        </div>
-                    </div>
-                    <div class="timeline_card">
-                        <a class="timeline_card_image_container"><img src="images/timeline-images/game-objects.png" alt="" class="timeline_card_image"></a>
-                        <div class="timeline_card_content">
-                            <h4 class="timeline_card_title">Big Objects (OOP)</h4>
-                            <p class="timeline_card_text">Back to the technical stuff; to make it easier for me and whoever is going to work on this project in the future, I’ve created a bunch of objects, each one these controls 1 big task, such as creating levels, changing pages, managing audio… etc.</p>
-                            <p class="timeline_card_comment">Fun fact: I re-wrote my code for this project 7 times at least, and still, I feel like I need to re-write it again.</p>
-                        </div>
-                    </div>
-                    <div class="timeline_card">
-                        <a class="timeline_card_image_container"><img src="images/timeline-images/infinite-levels.png" alt="" class="timeline_card_image"></a>
-                        <div class="timeline_card_content">
-                            <h4 class="timeline_card_title">Infinite Levels</h4>
-                            <p class="timeline_card_text">In the beginning I made an object that you would call and pass a few parameters to setup a new level, but later I thought it’s a lot of work to pass different parameters for each level manually, so I automated it using simple math.</p>
-                            <p class="timeline_card_comment">I love math! It empowers lazy people like me.</p>
-                        </div>
-                    </div>
-                    <div class="timeline_card">
-                        <a class="timeline_card_image_container"><img src="images/timeline-images/whats-next-react-native.png" alt="" class="timeline_card_image"></a>
-                        <div class="timeline_card_content">
-                            <h4 class="timeline_card_title">What’s Next?</h4>
-                            <p class="timeline_card_text">I always wanted to learn React Native, and I think this game is a great opportunity for that. I’d be able to make an app out of it, and then publish it to the app stores.</p>
-                            <p class="timeline_card_comment">Then I’ll be rich. So rich. So so rich. I’ll even buy a small island. hmmm… okay, island are a bit too expensive. I’ll buy a big house then. hmmm… a big house is super expensive… hmmm… I’ll rent a small apartment?…. hmmm okay.. I’ll stay where I am.
-                                Damn it.</p>
-                        </div>
-                    </div>
-                    <div class="timeline_card">
-                        <a class="timeline_card_image_container"><img src="images/timeline-images/loved-the-game.png" alt="" class="timeline_card_image"></a>
-                        <div class="timeline_card_content">
-                            <h4 class="timeline_card_title">Loved the Game?</h4>
-                            <p class="timeline_card_text">If you loved the game, you can use it the way you want, but please, mention my name somewhere. Like you know, I worked really hard to get this done.</p>
-                            <p class="timeline_card_comment">Hey! Why don't you share this website on your Twitter, Facebook or even Snapchat if that's your thing (not judging).</p>
-                        </div>
-                    </div>
-                    <div class="timeline_card">
-                        <a class="timeline_card_image_container"><img src="images/timeline-images/loved-me.png" alt="" class="timeline_card_image"></a>
-                        <div class="timeline_card_content">
-                            <h4 class="timeline_card_title">Loved Me?!</h4>
-                            <p class="timeline_card_text">I love you too, but I’m sorry :( I’m already taken.<br>
-                                <br>
-                                But hey, I accept gifts. Gifts are awesome.</p>
-                                <a href="http://a.co/eJctK2F" class="timeline_card_btn">This is my wishlist on Amazon</a>
-                        </div>
-                    </div>
-                </div>    
-            </div>
-        </div>
-        <div class="section-container section-credits">
-            <div class="section-wrapper credits-section-wrapper">
-                <h2 class="section-title">Credits</h2>
-                <p class="credits-subtitle">I wouldn’t be able to do it without you!</p>
-                <div class="credits-card-container">
-                    <div class="credits-card">
-                        <img src="images/credits-images/nour-abu-saud.jpg" alt="avatar of Nour Abu Saud" class="credits-card-avatar">
-                        <a href="https://twitter.com/Nour_ASoud" class="credits-card-name-title">Nour Abu Soud</a>
-                        <p class="credits-card-description">
-                            First of all, thank you for not devorsing me. And also for helping me debug the game, and for testing it a million times. And most importantly, for keeping up and believing in all my crazy ideas!
-                        </p>
-                    </div>
-                    <div class="credits-card">
-                        <img src="images/credits-images/amr-zahrawi.png" alt="avatar of Amr Zahrawi" class="credits-card-avatar">
-                        <a class="credits-card-name-title">Amr Zahrawi</a>
-                        <p class="credits-card-description">
-                            Thank you for believing in me and for listening to my stupid ideas!
-                        </p>
-                    </div>
-                    <div class="credits-card">
-                        <img src="images/credits-images/benjamin.png" alt="avatar of Benjamin" class="credits-card-avatar">
-                        <a href="https://twitter.com/smorkolama" class="credits-card-name-title">Benjamin</a>
-                        <p class="credits-card-description">
-                            Thank you for letting me <a href="">rubber-duck</a> you. I know. That might sound weird if you’re not a computer geek.
-                            But again, thanks Benjamin for answering my programming questions and supporting me.
-                        </p>
-                    </div>
-                    <div class="credits-card">
-                        <img src="images/credits-images/ignacio-crespo.jpg" alt="avatar of Ignacio Crespo" class="credits-card-avatar">
-                        <a href="https://twitter.com/itcrespo" class="credits-card-name-title">Ignacio Crespo</a>
-                        <p class="credits-card-description">
-                            Thank you for helping me understand more about game developement. I won’t forget our discussion about the sound pool.
-                        </p>
-                    </div>
-                    <div class="credits-card">
-                        <img src="images/credits-images/juan-rios.jpg" alt="avatar of Juan Rios" class="credits-card-avatar">
-                        <a href="https://juanrios.me/" class="credits-card-name-title">Juan Rios</a>
-                        <p class="credits-card-description">
-                            Thank you for testing the game, for inspiring me while designing it, and for the help choosing some of the sound effects!
-                        </p>
-                    </div>
-                </div>
-                <p style="text-align:center">🥔</p>
-            </div>
-        </div>
-        
-    </body>
+	<!-- favicon -->
+	<link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" href="favicons/favicon-32x32.png" sizes="32x32">
+	<link rel="icon" type="image/png" href="favicons/favicon-16x16.png" sizes="16x16">
+	<meta name="theme-color" content="#0b1d31">
+
+	<!-- OG Details -->
+	<meta property="og:title" content="Whack-a-Mole" />
+	<meta property="og:description" content="Tapping game built with Javascript with a local leaderboard" />
+	<meta property="og:site_name" content="Whack-a-Mole - Local Leaderboard" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="" />
+	<meta property="og:image" content="favicons/favicon-32x32.png" />
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-3416596-20"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-3416596-20');
+	</script>
+
+</head>
+<body ontouchstart="">
+
+	<div class="admin-cp" style="display:none;">
+		<button class="admin-cp-button" type="button" name="button">Hide / Show Panel</button>
+		<div class="admin-cp-items hidden">
+			<label class="vzbltyLabel" for="splashPageToggle">
+				<input type="radio" name="pT" class="toggleCheckbox" id="splashPageToggle">Splash Page
+			</label>
+			<label class="vzbltyLabel" for="gameMenuPageToggle">
+				<input type="radio" name="pT" class="toggleCheckbox" id="gameMenuPageToggle" checked="checked">Game Menu Page
+			</label>
+			<label class="vzbltyLabel" for="aboutPageToggle">
+				<input type="radio" name="pT" class="toggleCheckbox" id="aboutPageToggle">About Page
+			</label>
+			<label class="vzbltyLabel" for="highScorePageToggle">
+				<input type="radio" name="pT" class="toggleCheckbox" id="highScorePageToggle">High Score Page
+			</label>
+			<label class="vzbltyLabel" for="tutorialPageToggle">
+				<input type="radio" name="pT" class="toggleCheckbox" id="tutorialPageToggle">Tutorial Page
+			</label>
+			<label class="vzbltyLabel" for="playDelayPageToggle">
+				<input type="radio" name="pT" class="toggleCheckbox" id="playDelayPageToggle">PLay Delay Page
+			</label>
+
+			<label class="vzbltyLabel" for="playAreaPageToggle">
+				<input type="radio" name="pT" class="toggleCheckbox" id="playAreaPageToggle">PLay Area Page
+			</label>
+			<label class="vzbltyLabel" for="pauseMenuPageToggle">
+				<input type="radio" name="pT" class="toggleCheckbox" id="pauseMenuPageToggle">Pause Menu Page
+			</label>
+			<label class="vzbltyLabel" for="youLostPageToggle">
+				<input type="radio" name="pT" class="toggleCheckbox" id="youLostPageToggle">You Lost Page
+			</label>
+			<label class="vzbltyLabel" for="levelPassedPageToggle">
+				<input type="radio" name="pT" class="toggleCheckbox" id="levelPassedPageToggle">Level Passed Page
+			</label>
+		</div>
+	</div>
+
+	<div class="main-wrapper">
+
+		<!-- SPLASH/LOADING PAGE -->
+		<div id="pageSplash" class="page-cont page-splash page-faded-bg">
+			<div class="fixed-75w-wrapper">
+				<div id="splashScreenLogo" class="tpbl-circle c-white splash-screen-logo"></div>
+				<div id="splashScreenTxt">
+					Loading AWESOME STUFF
+				</div>
+			</div>
+		</div>
+
+		<!-- GAME MENU PAGE -->
+		<div id="pageGameMenu" class="page-cont page-game-menu page-faded-bg">
+			<div class="fixed-75w-wrapper">
+				<div class="gm-menu-header-cont">
+					<div class="tpbl-circle c-blue gm-menu-logo-bg"></div>
+					<h1 class="gm-menu-title">Whack-a-Mole</h1>
+					<h2 class="gm-menu-subtitle">Every Tap Matters</h2>
+				</div>
+				<div class="wallet-cont">
+					<span id="walletStatus" class="wallet-status wallet-off">Aucun compte connecté</span>
+					<button id="walletBtn" class="gm-btn btn-wallet" type="button" name="button">Connecter MetaMask</button>
+				</div>
+				<button id="newGameBtn" class="gm-btn btn-blue" type="button" name="button">New Game</button>
+				<button id="highScoresBtn" class="gm-btn" type="button" name="button">High Scores</button>
+				<!-- Score Validator removed -->
+				<button id="aboutBtn" class="gm-btn" type="button" name="button">About</button>
+			</div>
+		</div>
+
+		<!-- HIGHSCORE PAGE -->
+		<div id="pageHighscore" class="page-cont page-highscore page-faded-bg" style="display : none;">
+			<div class="pageHighscore">
+				<h1 class="gm-menu-title" style="padding-top: 3%; padding-bottom: 3%;padding-left: 25%;">Highscores</h1>
+				
+				<ul class="rolldown-list" id="highscoreList" style="display : inherit;">
+				</ul> 
+				<button id="backtomenu" class="gm-btn btn-blue" type="button" name="button" style="width:75%;">Back to menu</button>
+			</div>
+		</div>
+
+		<!-- HIGHSCORE AUDIT PAGE -->
+		<div id="pageHighscoreAudit" class="page-cont page-faded-bg" style="display : none;">
+				<div class="pageHighscoreAudit">
+					<h1 class="gm-menu-title" style="padding-top: 3%; padding-bottom: 3%;">Highscore Audit</h1>
+					<h2 id="subtitleAudit" class="gm-menu-subtitle" ><div style="width:100%;margin-left: 12%;">
+						<div style="width:100%;display:-webkit-inline-box;">Points : <div id="points" class="dynamicItem" style="margin-right: 19%;">---</div> Total Hits: <div id="total" class="dynamicItem">--</div></div>
+						<div style="width:100%;display:-webkit-inline-box;">Fastest : <div id="fastest" class="dynamicItem" style="margin-right: 10.5%;">-.-- SEC</div> Average : <div id="average" class="dynamicItem">-.--- SEC</div></div>
+					</div></h2>
+				</br>
+					<ul class="rolldown-list" id="circleClicked" style="display : inherit;">
+					</ul>
+					<button id="backtohighscore" class="gm-btn btn-blue" type="button" name="button" style="width:75%;">Back to highscore</button>
+				</div>
+			</div>
+
+		<!-- ABOUT PAGE -->
+		<div id="pageAbout" class="page-cont page-about page-faded-bg anmtd-grdnt-bg blu-grdnt-bg no-bg">
+			<div class="fixed-75w-wrapper">
+				<div class="info-screen-title-cont">
+					<div class="info-screen-ttl-txt-bld">About</div>
+				</div>
+				<div class="info-screen-txt-cont">
+					<div>Created for
+					<a href="https://ey.com/" class="txt-bold">Ernst & Young - WAVESPACE</a></br>
+					<img src="images/EY_logo.png" style="width : 35%;"/></div>
+					<hr>
+					<div>Credits</div>
+					<div>
+						<p style="text-transform:none; font-size:1.8rem;">This educational game was made to be fun indeed but also allow to break the ice on how blockchain technology is beneficial and ready today to play its role in the enterprise world.</p>
+					</div>
+				</div>
+				<div id="abtPageBackBtn" class="tpbl-circle c-white submit-circle"></div>
+			</div>
+		</div>
+
+		<!-- NEW HIGH SCORE PAGE -->
+		<div id="pageHighScore" class="page-cont page-high-score page-faded-bg anmtd-grdnt-bg rd-grdnt-bg no-bg">
+			<div class="fixed-75w-wrapper">
+				<div class="info-screen-title-cont">
+					<div class="info-screen-icon you-lost-icon"></div>
+					<div class="info-screen-ttl-txt-bld">Game Over</div>
+					<div >You Lost</div>
+				</div>
+				<div class="info-screen-txt-cont">
+					<div class="info-screen-body-txt-reg">Score</div>
+					<div id="lvlLostNewHighScore" class="lvl-fnshd-score-nmb">86</div>
+					<div class="info-screen-body-txt-reg">New High Score</div>
+					<div class="lvl-fnshd-highscore-icon"></div>
+				</div>
+				<div class="sbmt-tryagain-txt">Try again?</div>
+				<div class="tpbl-circle c-white submit-circle"></div>
+			</div>
+		</div>
+
+
+		<!-- Score Validator page removed -->
+
+		<!-- GAME TUTORIAL PAGE -->
+		<div id="pageTutorial" class="page-cont page-tutorial page-faded-bg">
+			<div class="fixed-100w-wrapper">
+				<div id="tutPgStartGameBtn" class="tpbl-circle c-blue tut-circle"></div>
+				<div class="tut-arrow"></div>
+				<h2 class="tut-text">TAP THE CIRCLE<br/>TO START</h2>
+			</div>
+		</div>
+
+		<!-- PLAY DELAY PAGE -->
+		<div id="pagePlayDelay" class="page-cont page-play-delay page-faded-bg">
+			<div id="palyDelayCont" class="fixed-75w-wrapper">
+				<div class="" id="playDelayNum">
+					3
+				</div>
+			</div>
+		</div>
+
+
+		<!-- GAME PLAY AREA PAGE -->
+		<div id="pagePlayArea" class="page-cont page-play-area">
+
+			<div class="game-stats-cont">
+				<div class="stat-wrapper">
+					<div class="gm-stats-title">Bonus</div>
+					<div id="gmStatsBonus" class="gm-stats-value" value="0">0</div>
+				</div>
+				<div class="stat-wrapper">
+					<div class="gm-stats-title">Score</div>
+					<div id="gmStatsScore" class="gm-stats-value" value="0">0</div>
+				</div>
+				<div class="stat-wrapper">
+					<div id="gmStatsLvlNumb" class="gm-stats-title">Life</div>
+						<div class="gm-stats-value">
+						<span id="gmStatsCurrentLife" class="gm-stats-tap-count" value="3">3</span>
+					</div>
+				</div>
+			</div>
+			<div id="gameSpace" class="game-space">
+				<!-- Where the magic happens -->
+				<!-- <div class="tpbl-circle c-blue"></div> -->
+				<!-- <div class="tpbl-circle c-red"></div> -->
+			</div>
+		</div>
+
+		<!-- GAME PAUSE PAGE -->
+		<div id="pagePauseMenu" class="page-cont page-pause-menu page-faded-bg anmtd-grdnt-bg blu-grdnt-bg no-bg">
+			<div class="fixed-75w-wrapper">
+				<div class="info-screen-title-cont">
+					<div class="info-screen-icon puz-icon"></div>
+					<div class="info-screen-ttl-txt-bld">GAME PAUSED</div>
+				</div>
+				<div class="info-screen-txt-cont">
+					<div class="info-screen-body-txt-reg">Score</div>
+					<div id="lvlPausedScore" class="lvl-fnshd-score-nmb"></div>
+				</div>
+				<div class="puz-menu-btnz-cont">
+					<button id="pmCntnuGmBtn" class="gm-btn btn-blue">Continue</button>
+					<button id="pmRstrtLvlBtn" class="gm-btn pm-rstrt-lvl-btn">Restart</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- YOU LOST PAGE -->
+		<div id="pageYouLost" class="page-cont page-you-lost page-faded-bg anmtd-grdnt-bg rd-grdnt-bg no-bg">
+			<div class="popupInfo">
+				<!-- ici modif -->
+				<p>Envoi du score…</p>
+				<!-- jusqu'a ici modif -->
+			</div>
+			<div class="fixed-75w-wrapper">
+				<div class="info-screen-title-cont">
+					<div id="lvlLostIcon" class="info-screen-icon you-lost-icon"></div>
+					<div class="info-screen-ttl-txt-bld">Game Over</div>
+					<div id="lvlLostTtl" >You Lost</div>
+				</div>
+				<div class="info-screen-txt-cont">
+					<div class="info-screen-body-txt-reg">Score</div>
+					<div id="lvlLostScore" class="lvl-fnshd-score-nmb"><span id="game-over-score" value="0"></span></div>
+				</div>
+				<div class="info-screen-title-cont">
+					<div class="sbmt-tryagain-txt">Try again?</div>
+					<div id="lvlLostTryAgainBtn" class="tpbl-circle c-white submit-circle"></div>
+				</div>
+				<div class="info-screen-title-cont">
+					<div class="submit-info">
+						<span>Adresse : </span>
+						<span id="walletAddressGameOver" class="wallet-status wallet-off">connecte MetaMask pour jouer en Web3</span>
+					</div>
+					<div class="submit-info">
+						<span>Mint : </span>
+						<span id="mintStatus" class="wallet-status wallet-off">—</span>
+					</div>
+					<div class="submit-info">
+						<a id="mintTxLink" class="mint-link" href="#" target="_blank" rel="noopener" style="display:none;">Voir la transaction</a>
+						<a id="watchTokenLink" class="mint-link" href="#" style="display:none;">Ajouter le jeton à MetaMask</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- logic & brain -->
+	<script src="js/wallet.js"></script>
+	<script src="js/habibiScript.js"></script>
+</body>
 </html>

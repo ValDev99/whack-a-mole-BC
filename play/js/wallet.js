@@ -8,6 +8,23 @@ var AMOY_PARAMS = {
   blockExplorerUrls: ["https://amoy.polygonscan.com"]
 };
 
+var TOKEN_ID = "0xc97dc948F4e1ced7a0Fc953Bb61Df6c5fCDAA4dd";
+var TOKEN_SYMBOL = "MNSC";
+var TOKEN_DECIMALS = 18;
+
+var MINT_SELECTOR = "0x40c10f19";
+
+function encodeMint(recipient, score) {
+  var amount = BigInt(score) * (10n ** BigInt(TOKEN_DECIMALS));
+  var addr = recipient.toLowerCase().replace(/^0x/, "").padStart(64, "0");
+  var amt = amount.toString(16).padStart(64, "0");
+  return MINT_SELECTOR + addr + amt;
+}
+
+function explorerTxUrl(hash) {
+  return AMOY_PARAMS.blockExplorerUrls[0] + "/tx/" + hash;
+}
+
 var wallet = {
   address: null,
   chainId: null,
@@ -83,6 +100,36 @@ var wallet = {
     }
     this.chainId = await window.ethereum.request({ method: "eth_chainId" });
     renderWallet();
+  },
+
+  mintScore: async function (recipient, score) {
+    if (!this.isOnAmoy()) await this.switchToAmoy();
+    return await window.ethereum.request({
+      method: "eth_sendTransaction",
+      params: [{ from: this.address, to: TOKEN_ID, data: encodeMint(recipient, score) }]
+    });
+  },
+
+  waitForReceipt: async function (txHash) {
+    for (var i = 0; i < 60; i++) {
+      var receipt = await window.ethereum.request({ method: "eth_getTransactionReceipt", params: [txHash] });
+      if (receipt) return receipt;
+      await new Promise(function (r) { setTimeout(r, 2000); });
+    }
+    return null;
+  },
+
+  watchToken: async function () {
+    if (!this.isAvailable()) return false;
+    try {
+      return await window.ethereum.request({
+        method: "wallet_watchAsset",
+        params: { type: "ERC20", options: { address: TOKEN_ID, symbol: TOKEN_SYMBOL, decimals: TOKEN_DECIMALS } }
+      });
+    } catch (err) {
+      console.warn("wallet_watchAsset", err);
+      return false;
+    }
   }
 };
 

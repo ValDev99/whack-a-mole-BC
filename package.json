@@ -2,15 +2,17 @@
   "name": "whack-a-mole-local",
   "version": "1.0.0",
   "private": true,
-  "description": "Whack-a-Mole with local SQLite persistence (no Mantle/blockchain)",
+  "description": "Whack-a-Mole — scores mintés en jetons sur Polygon Amoy vers l'adresse MetaMask du joueur",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "npx nodemon server.js"
   },
   "dependencies": {
-    "better-sqlite3": "^9.5.0",
+    "better-sqlite3": "^13.0.3",
     "cors": "^2.8.5",
+    "dotenv": "^18.0.3",
+    "ethers": "^6.17.0",
     "express": "^4.19.2"
   }
 }

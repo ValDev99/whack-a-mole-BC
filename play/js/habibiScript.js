@@ -457,8 +457,7 @@ var gameEngine = {
   },
   
   resetSubmitScoreButton : function(){
-    $('#sbmt-score').removeAttr("disabled");
-    $('#sbmt-score').addClass("btn-blue");
+    setMintStatus("—", "wallet-off");
   },
 
   resetCirclesPositionArray: function()
@@ -485,6 +484,7 @@ var gameEngine = {
   },
   start: function() {
     gameEngine.currentlyPlaying = true;
+    gameEngine.scoreSent = false;
     // Inatial level setup & adding data to the game engine
     gameEngine.updateScore(gameEngine.score);
     gameEngine.goodCirclesCount = gameEngine.goodCirclesCount;
@@ -517,6 +517,7 @@ var gameEngine = {
     toolsBox.showPage(pageYouLost);
     gameEngine.stop();
 
+    submitScoreOnChain();
   },
 
   gameOver: function() { // tapping a red circle
@@ -675,6 +676,7 @@ newGameBtn.addEventListener('click', async function() {
     await wallet.connect();
     if (!wallet.isConnected() || !wallet.isOnAmoy()) return; // refus, ou mauvais réseau
   }
+  gameEngine.playerAddress = wallet.address;
 
   toolsBox.showPage(pageTutorial);
   toolsBox.hidePage(pageGameMenu);
@@ -723,30 +725,94 @@ function collectClickedCirclesTime() {
   return times;
 }
 
-$("#sbmt-score").click(async function(){
-  showPopup();
-  disableButton(this);
+function setMintStatus(text, cls) {
+  $("#mintStatus").text(text).attr("class", "wallet-status " + cls);
+}
 
-  const playerName = $("#name").val().trim() === "" ? "Undefined" : $("#name").val().trim();
-  const clickedCirclesTime = collectClickedCirclesTime();
+function showTxLink(hash) {
+  if (hash) {
+    $("#mintTxLink").attr("href", explorerTxUrl(hash)).show();
+  } else {
+    $("#mintTxLink").hide();
+  }
+}
 
+async function saveScore(body) {
   try {
     const res = await fetch(`${API_BASE}/api/scores`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        player: playerName,
-        score: gameEngine.score,
-        circleTime: clickedCirclesTime
-      })
+      body: JSON.stringify(body)
     });
-    if (!res.ok) {
-      console.log("Failed to save score", res.status);
-    }
+    if (!res.ok) console.log("Failed to save score", res.status);
   } catch (e) {
     console.error("Error saving score", e);
   }
+}
+
+function mintErrorMessage(err) {
+  if (err && err.code === 4001) return "Mint refusé dans MetaMask";
+  const msg = (err && (err.data && err.data.message || err.message)) || "";
+  if (/insufficient funds/i.test(msg)) return "Pas assez de POL pour le gas";
+  if (/ExceededCap|0x9e79f854/i.test(msg)) return "Plafond de MNSC atteint (MAX_SUPPLY)";
+  return "Mint échoué" + (msg ? " : " + msg.slice(0, 80) : "");
+}
+
+async function submitScoreOnChain() {
+  if (gameEngine.scoreSent) return;
+  gameEngine.scoreSent = true;
+
+  showTxLink(null);
+  const address = gameEngine.playerAddress || wallet.address;
+  const score = gameEngine.score;
+  const base = { address: address, score: score, circleTime: collectClickedCirclesTime() };
+
+  if (!address || !wallet.isConnected()) {
+    setMintStatus("Aucune adresse MetaMask — score non minté", "wallet-error");
+    return;
+  }
+  if (score <= 0) {
+    setMintStatus("Score de 0 : rien à minter", "wallet-off");
+    saveScore(base);
+    return;
+  }
+
+  let txHash;
+  try {
+    setMintStatus("Confirme le mint dans MetaMask…", "wallet-off");
+    txHash = await wallet.mintScore(address, score);
+  } catch (err) {
+    console.error("mint", err);
+    const msg = mintErrorMessage(err);
+    setMintStatus(msg, "wallet-error");
+    saveScore(Object.assign({ mintError: msg }, base));
+    return;
+  }
+
+  showPopup();
+  showTxLink(txHash);
+  setMintStatus(`Mint de ${score} ${TOKEN_SYMBOL} en cours…`, "wallet-off");
+  saveScore(Object.assign({ txHash: txHash }, base));
+
+  try {
+    const receipt = await wallet.waitForReceipt(txHash);
+    if (!receipt) {
+      setMintStatus("Toujours en attente — vérifie la transaction", "wallet-off");
+    } else if (receipt.status === "0x1") {
+      setMintStatus(`${score} ${TOKEN_SYMBOL} reçus ✔`, "wallet-on");
+    } else {
+      setMintStatus("Transaction annulée (revert) — plafond atteint ?", "wallet-error");
+    }
+  } catch (err) {
+    setMintStatus("Impossible de suivre la transaction", "wallet-off");
+  }
+}
+
+$("#watchTokenLink").click(function (e) {
+  e.preventDefault();
+  wallet.watchToken();
 });
+$("#watchTokenLink").show();
 
 $("#lvlLostTryAgainBtn").click(function(){
   gameEngine.reset();
