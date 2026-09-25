@@ -96,9 +96,11 @@ for (const [col, type] of [['address', 'TEXT'], ['tx_hash', 'TEXT'], ['mint_stat
   if (!existingCols.includes(col)) db.prepare(`ALTER TABLE scores ADD COLUMN ${col} ${type}`).run();
 }
 
-//ici modif
+// ==== Ajouter un champ dans les scores pour l'ID du niveau ====
 if (!existingCols.includes('level_id')) db.prepare('ALTER TABLE scores ADD COLUMN level_id INTEGER NOT NULL DEFAULT 1').run();
+// ========
 
+// ==== Création de nouveaux niveaux ====
 db.prepare(`
   CREATE TABLE IF NOT EXISTS levels (
     id INTEGER PRIMARY KEY,
@@ -125,16 +127,16 @@ const selectLevel = db.prepare(`
   SELECT id, name, life, circle_despawn_time AS circleDespawnTime, seed
   FROM levels WHERE id = ?
 `);
-//jusqu'a ici modif
+// ========
 
 const setMint = db.prepare('UPDATE scores SET mint_status = ?, mint_error = ? WHERE id = ?');
-//ici modif
+// ==== Ajouter un champ dans les scores pour l'ID du niveau ====
 const selectOne = db.prepare(`
   SELECT id, player, score, level_id AS levelId, address, circle_time AS circleTime, created_at AS createdAt,
          tx_hash AS txHash, mint_status AS mintStatus, mint_error AS mintError
   FROM scores WHERE id = ?
 `);
-//jusqu'a ici modif
+// ========
 
 // API routes
 app.get('/api/health', (_req, res) => {
@@ -150,7 +152,7 @@ app.get('/api/config', (_req, res) => {
   });
 });
 
-//ici modif
+// ==== Récupérer un niveau par son ID (erreur 404 si le niveau n'est pas trouvé) ====
 app.get('/api/levels/:id', (req, res) => {
   const id = Number(req.params.id);
   if (!Number.isInteger(id) || id < 1) return res.status(400).json({ error: 'invalid level id' });
@@ -158,16 +160,16 @@ app.get('/api/levels/:id', (req, res) => {
   if (!level) return res.status(404).json({ error: 'level_not_found' });
   return res.json(level);
 });
-//jusqu'a ici modif
+// ========
 
 app.post('/api/scores', (req, res) => {
   try {
     
-    //ici modif
+    // ==== Ajouter un champ dans les scores pour l'ID du niveau ====
     const { address, score, circleTime, player, txHash, mintError, levelId } = req.body || {};
     const level = selectLevel.get(levelId === undefined ? 1 : Number(levelId));
     if (!level) return res.status(400).json({ error: 'level_not_found' });
-    //jusqu'a ici modif
+    // ========
     if (typeof address !== 'string' || !ethers.isAddress(address)) {
       return res.status(400).json({ error: 'address must be a valid wallet address' });
     }
@@ -188,11 +190,11 @@ app.post('/api/scores', (req, res) => {
     else status = 'not_minted';
     const err = !hash && typeof mintError === 'string' ? mintError.slice(0, 200) : null;
     const insert = db.prepare(
-      //ici modif
+      // ==== Ajouter un champ dans les scores pour l'ID du niveau ====
       'INSERT INTO scores (player, score, level_id, circle_time, address, tx_hash, mint_status, mint_error) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
     );
     const info = insert.run(name, numericScore, level.id, JSON.stringify(ct), to, hash, status, err);
-    //jusqu'a ici modif
+    // ========
     if (hash) {
       console.log(`[mint] #${info.lastInsertRowid} ${numericScore} → ${to} tx ${hash}`);
       verifyMint(info.lastInsertRowid, hash, to, numericScore);
@@ -209,14 +211,14 @@ app.post('/api/scores', (req, res) => {
 app.get('/api/scores', (_req, res) => {
   try {
   
-    //ici modif
+    // ==== Ajouter un champ dans les scores pour l'ID du niveau ====
     const rows = db.prepare(`
       SELECT id, player, score, level_id AS levelId, address, tx_hash AS txHash, mint_status AS mintStatus, created_at AS createdAt
       FROM scores
       ORDER BY score DESC, created_at DESC
       LIMIT 50
     `).all();
-    //jusqu'a ici modif
+    // ========
 
     return res.json(rows);
   } catch (err) {
@@ -229,9 +231,7 @@ app.get('/api/scores/:id', (req, res) => {
   try {
     const id = Number(req.params.id);
     if (!Number.isFinite(id)) return res.status(400).json({ error: 'invalid id' });
-    //ici modif
     const row = selectOne.get(id);
-    //jusqu'a ici modif
     if (!row) return res.status(404).json({ error: 'not_found' });
     row.circleTime = JSON.parse(row.circleTime || '[]');
     return res.json(row);
