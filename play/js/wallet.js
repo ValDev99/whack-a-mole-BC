@@ -8,7 +8,9 @@ var AMOY_PARAMS = {
   blockExplorerUrls: ["https://amoy.polygonscan.com"]
 };
 
+// ==== Ajouter dans le jeu en mode “hard code” le nouvel Token ID ====
 var TOKEN_ID = "0xd52E5f238576019248B14aAde1AAAeA11F6B7eE5";
+// ========
 var TOKEN_SYMBOL = "MNSC";
 var TOKEN_DECIMALS = 18;
 
@@ -104,7 +106,7 @@ var wallet = {
   // Frappe le score au joueur, 10 MNSC a l'auteur et 5 au leader precedent.
   endGame: async function (score) {
     if (!this.isOnAmoy()) await this.switchToAmoy();
-    //ici modif
+    // ==== Minter le score à destination de l'adresse de session (frais de gas Amoy) ====
     var fees = await this.gasFees();
     return await window.ethereum.request({
       method: "eth_sendTransaction",
@@ -135,7 +137,7 @@ var wallet = {
     console.log("gas: base", baseFee / 1000000000n, "gwei, tip", tip / 1000000000n, "gwei, max", maxFee / 1000000000n, "gwei");
     return { maxPriorityFeePerGas: "0x" + tip.toString(16), maxFeePerGas: "0x" + maxFee.toString(16) };
   },
-  //jusqu'a ici modif
+  // ========
 
   // Lecture seule, sans transaction
   call: async function (selector) {

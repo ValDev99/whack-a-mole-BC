@@ -469,9 +469,9 @@ var gameEngine = {
   },
   resetLife: function()
   {
-    //ici modif
+    // ==== Création de nouveaux niveaux : nombre de vies selon le niveau ====
     document.getElementById("gmStatsCurrentLife").innerHTML = String(defaultGameValues.life);
-    //jusqu'a ici modif
+    // ========
     gameEngine.life = defaultGameValues.life;
   },
 
@@ -678,11 +678,11 @@ newGameBtn.addEventListener('click', async function() {
     await wallet.connect();
     if (!wallet.isConnected() || !wallet.isOnAmoy()) return; // refus, ou mauvais réseau
   }
-  //ici modif
+  // ==== Création de nouveaux niveaux : New Game lance le niveau 1 ====
   var level = DEFAULT_LEVEL;
   try { level = (await fetchLevel(DEFAULT_LEVEL.id)) || DEFAULT_LEVEL; } catch (e) { }
   startLevel(level, pageGameMenu);
-  //jusqu'a ici modif
+  // ========
 }, false);
 // -- About Button
 aboutBtn.addEventListener('click', function() {
@@ -768,9 +768,9 @@ async function submitScoreOnChain() {
   showTxLink(null);
   const address = gameEngine.playerAddress || wallet.address;
   const score = gameEngine.score;
-  //ici modif
+  // ==== Ajouter un champ dans les scores pour l'ID du niveau ====
   const base = { address: address, score: score, levelId: gameEngine.level ? gameEngine.level.id : DEFAULT_LEVEL.id, circleTime: collectClickedCirclesTime() };
-  //jusqu'a ici modif
+  // ========
 
   if (!address || !wallet.isConnected()) {
     setMintStatus("Aucune adresse MetaMask — score non minté", "wallet-error");
@@ -819,7 +819,7 @@ $("#watchTokenLink").click(function (e) {
 });
 $("#watchTokenLink").show();
 
-//ici modif
+// ==== Création de nouveaux niveaux : chargement et application d'un niveau ====
 var DEFAULT_LEVEL = { id: 1, name: "Classique", life: 3, circleDespawnTime: 2000, seed: null };
 var baseCirclesPosition = circlesPosition.slice();
 
@@ -865,7 +865,9 @@ function startLevel(level, fromPage) {
   toolsBox.showPage(pageTutorial);
   toolsBox.hidePage(fromPage);
 }
+// ========
 
+// ==== Nouvelle page UI pour débuter sur un niveau custom ====
 var pageCustomLevel = document.querySelector('#pageCustomLevel');
 
 function showCustomLevelError(msg) {
@@ -889,7 +891,9 @@ $("#customLevelBackBtn").click(function(){
 $("#customLevelId").on("keydown", function(e){
   if (e.key === "Enter") $("#customLevelStartBtn").click();
 });
+// ========
 
+// ==== Bouton “démarrer la partie” + erreur si le niveau n'est pas trouvé ====
 $("#customLevelStartBtn").click(async function(){
   audioPool.playSound(buttonTap);
   const raw = String($("#customLevelId").val()).trim();
@@ -927,7 +931,7 @@ $("#customLevelStartBtn").click(async function(){
     btn.removeAttr("disabled");
   }
 });
-//jusqu'a ici modif
+// ========
 
 $("#lvlLostTryAgainBtn").click(function(){
   gameEngine.reset();
@@ -962,9 +966,9 @@ async function Get50BestResults()
       list.forEach(elem => {
         try {
           const date = new Date(elem.createdAt);
-          //ici modif
+          // ==== Ajouter un champ dans les scores pour l'ID du niveau : affichage dans le classement ====
           const player = elem.player + " · niv. " + (elem.levelId || 1);
-          //jusqu'a ici modif
+          // ========
           const score = elem.score;
           $("#highscoreList").append(`<li id="${elem.id}" class='highscoreitem'><p class="firstitem">${date.toLocaleString()}<p class="seconditem">${player}<p class="thirditem">${score}</p></p></p</li>`);
         } catch (error) {
