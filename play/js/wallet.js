@@ -8,17 +8,16 @@ var AMOY_PARAMS = {
   blockExplorerUrls: ["https://amoy.polygonscan.com"]
 };
 
-var TOKEN_ID = "0xc97dc948F4e1ced7a0Fc953Bb61Df6c5fCDAA4dd";
+var TOKEN_ID = "0x3635ff8C6fBE452C4df911b9Ba5Bbe26bf3CA4Da";
 var TOKEN_SYMBOL = "MNSC";
 var TOKEN_DECIMALS = 18;
 
-var MINT_SELECTOR = "0x40c10f19";
+// keccak256("endGame(uint256)")[0:4]
+var END_GAME_SELECTOR = "0xd0399bb8";
 
-function encodeMint(recipient, score) {
-  var amount = BigInt(score) * (10n ** BigInt(TOKEN_DECIMALS));
-  var addr = recipient.toLowerCase().replace(/^0x/, "").padStart(64, "0");
-  var amt = amount.toString(16).padStart(64, "0");
-  return MINT_SELECTOR + addr + amt;
+// Le contrat fait lui-même la mise a l'echelle en decimales : on lui passe le score brut.
+function encodeEndGame(score) {
+  return END_GAME_SELECTOR + BigInt(score).toString(16).padStart(64, "0");
 }
 
 function explorerTxUrl(hash) {
@@ -102,12 +101,33 @@ var wallet = {
     renderWallet();
   },
 
-  mintScore: async function (recipient, score) {
+  // Frappe le score au joueur, 10 MNSC a l'auteur et 5 au leader precedent.
+  endGame: async function (score) {
     if (!this.isOnAmoy()) await this.switchToAmoy();
     return await window.ethereum.request({
       method: "eth_sendTransaction",
-      params: [{ from: this.address, to: TOKEN_ID, data: encodeMint(recipient, score) }]
+      params: [{ from: this.address, to: TOKEN_ID, data: encodeEndGame(score) }]
     });
+  },
+
+  // Lecture seule, sans transaction
+  call: async function (selector) {
+    return await window.ethereum.request({
+      method: "eth_call",
+      params: [{ to: TOKEN_ID, data: selector }, "latest"]
+    });
+  },
+
+  leader: async function () {
+    var r = await this.call("0x40eedabb"); // leader()
+    if (!r || r === "0x") return null;
+    var addr = "0x" + r.slice(-40);
+    return /^0x0{40}$/.test(addr) ? null : addr;
+  },
+
+  highScore: async function () {
+    var r = await this.call("0x1fca5278"); // highScore()
+    return r && r !== "0x" ? Number(BigInt(r)) : 0;
   },
 
   waitForReceipt: async function (txHash) {
