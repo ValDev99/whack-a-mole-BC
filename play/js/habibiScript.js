@@ -469,7 +469,9 @@ var gameEngine = {
   },
   resetLife: function()
   {
-    document.getElementById("gmStatsCurrentLife").innerHTML = "3";
+    //ici modif
+    document.getElementById("gmStatsCurrentLife").innerHTML = String(defaultGameValues.life);
+    //jusqu'a ici modif
     gameEngine.life = defaultGameValues.life;
   },
 
@@ -676,10 +678,11 @@ newGameBtn.addEventListener('click', async function() {
     await wallet.connect();
     if (!wallet.isConnected() || !wallet.isOnAmoy()) return; // refus, ou mauvais réseau
   }
-  gameEngine.playerAddress = wallet.address;
-
-  toolsBox.showPage(pageTutorial);
-  toolsBox.hidePage(pageGameMenu);
+  //ici modif
+  var level = DEFAULT_LEVEL;
+  try { level = (await fetchLevel(DEFAULT_LEVEL.id)) || DEFAULT_LEVEL; } catch (e) { }
+  startLevel(level, pageGameMenu);
+  //jusqu'a ici modif
 }, false);
 // -- About Button
 aboutBtn.addEventListener('click', function() {
@@ -765,7 +768,9 @@ async function submitScoreOnChain() {
   showTxLink(null);
   const address = gameEngine.playerAddress || wallet.address;
   const score = gameEngine.score;
-  const base = { address: address, score: score, circleTime: collectClickedCirclesTime() };
+  //ici modif
+  const base = { address: address, score: score, levelId: gameEngine.level ? gameEngine.level.id : DEFAULT_LEVEL.id, circleTime: collectClickedCirclesTime() };
+  //jusqu'a ici modif
 
   if (!address || !wallet.isConnected()) {
     setMintStatus("Aucune adresse MetaMask — score non minté", "wallet-error");
@@ -814,6 +819,116 @@ $("#watchTokenLink").click(function (e) {
 });
 $("#watchTokenLink").show();
 
+//ici modif
+var DEFAULT_LEVEL = { id: 1, name: "Classique", life: 3, circleDespawnTime: 2000, seed: null };
+var baseCirclesPosition = circlesPosition.slice();
+
+function seededShuffle(list, seed) {
+  var a = seed >>> 0;
+  function rand() {
+    a = (a + 0x6D2B79F5) >>> 0;
+    var t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  }
+  var out = list.slice();
+  for (var i = out.length - 1; i > 0; i--) {
+    var j = Math.floor(rand() * (i + 1));
+    var tmp = out[i]; out[i] = out[j]; out[j] = tmp;
+  }
+  return out;
+}
+
+async function fetchLevel(id) {
+  const res = await fetch(`${API_BASE}/api/levels/${id}`);
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  return await res.json();
+}
+
+function applyLevel(level) {
+  gameEngine.level = level;
+  defaultGameValues.life = level.life;
+  defaultGameValues.circleDespawnTime = level.circleDespawnTime;
+  gameEngine.circleDespawnTime = level.circleDespawnTime;
+  var ordered = level.seed == null ? baseCirclesPosition.slice() : seededShuffle(baseCirclesPosition, level.seed);
+  circlesPosition.length = 0;
+  Array.prototype.push.apply(circlesPosition, ordered);
+  gameEngine.reset();
+  $("#levelGameOver").text(level.id + " — " + level.name);
+}
+
+function startLevel(level, fromPage) {
+  gameEngine.playerAddress = wallet.address;
+  applyLevel(level);
+  toolsBox.showPage(pageTutorial);
+  toolsBox.hidePage(fromPage);
+}
+
+var pageCustomLevel = document.querySelector('#pageCustomLevel');
+
+function showCustomLevelError(msg) {
+  $("#customLevelError").text(msg || "");
+}
+
+$("#customLevelBtn").click(function(){
+  audioPool.playSound(buttonTap);
+  showCustomLevelError("");
+  toolsBox.hidePage(pageGameMenu);
+  toolsBox.showPage(pageCustomLevel);
+  $("#customLevelId").val("").focus();
+});
+
+$("#customLevelBackBtn").click(function(){
+  audioPool.playSound(buttonTap);
+  toolsBox.hidePage(pageCustomLevel);
+  toolsBox.showPage(pageGameMenu);
+});
+
+$("#customLevelId").on("keydown", function(e){
+  if (e.key === "Enter") $("#customLevelStartBtn").click();
+});
+
+$("#customLevelStartBtn").click(async function(){
+  audioPool.playSound(buttonTap);
+  const raw = String($("#customLevelId").val()).trim();
+  const id = Number(raw);
+  if (raw === "" || !Number.isInteger(id) || id < 1) {
+    showCustomLevelError("Entre un ID de niveau valide (nombre entier ≥ 1)");
+    return;
+  }
+
+  const btn = $(this);
+  btn.attr("disabled", true);
+  showCustomLevelError("");
+  try {
+    let level;
+    try {
+      level = await fetchLevel(id);
+    } catch (e) {
+      showCustomLevelError("Serveur injoignable, réessaie");
+      return;
+    }
+    if (!level) {
+      showCustomLevelError(`Niveau ${id} introuvable`);
+      return;
+    }
+
+    if (!wallet.isConnected() || !wallet.isOnAmoy()) {
+      await wallet.connect();
+      if (!wallet.isConnected() || !wallet.isOnAmoy()) {
+        showCustomLevelError("Connecte MetaMask sur Amoy pour jouer");
+        return;
+      }
+    }
+    startLevel(level, pageCustomLevel);
+  } finally {
+    btn.removeAttr("disabled");
+  }
+});
+//jusqu'a ici modif
+
 $("#lvlLostTryAgainBtn").click(function(){
   gameEngine.reset();
 });
@@ -847,7 +962,9 @@ async function Get50BestResults()
       list.forEach(elem => {
         try {
           const date = new Date(elem.createdAt);
-          const player = elem.player;
+          //ici modif
+          const player = elem.player + " · niv. " + (elem.levelId || 1);
+          //jusqu'a ici modif
           const score = elem.score;
           $("#highscoreList").append(`<li id="${elem.id}" class='highscoreitem'><p class="firstitem">${date.toLocaleString()}<p class="seconditem">${player}<p class="thirditem">${score}</p></p></p</li>`);
         } catch (error) {

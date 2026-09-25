@@ -10,7 +10,7 @@ const { ethers } = require('ethers');
 const PORT = process.env.PORT || 3000;
 const app = express();
 
-const TOKEN_ID = '0xc97dc948F4e1ced7a0Fc953Bb61Df6c5fCDAA4dd';
+const TOKEN_ID = '0xd52E5f238576019248B14aAde1AAAeA11F6B7eE5';
 const RPC_URL = 'https://polygon-amoy.drpc.org';
 const CHAIN_ID = 80002n;
 const MAX_SCORE = 100000;
@@ -96,12 +96,45 @@ for (const [col, type] of [['address', 'TEXT'], ['tx_hash', 'TEXT'], ['mint_stat
   if (!existingCols.includes(col)) db.prepare(`ALTER TABLE scores ADD COLUMN ${col} ${type}`).run();
 }
 
+//ici modif
+if (!existingCols.includes('level_id')) db.prepare('ALTER TABLE scores ADD COLUMN level_id INTEGER NOT NULL DEFAULT 1').run();
+
+db.prepare(`
+  CREATE TABLE IF NOT EXISTS levels (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    life INTEGER NOT NULL,
+    circle_despawn_time INTEGER NOT NULL,
+    seed INTEGER
+  )
+`).run();
+
+const LEVELS = [
+  { id: 1, name: 'Classique', life: 3, circleDespawnTime: 2000, seed: null },
+  { id: 2, name: 'Facile', life: 5, circleDespawnTime: 3000, seed: 42 },
+  { id: 3, name: 'Difficile', life: 2, circleDespawnTime: 1200, seed: 1337 }
+];
+const upsertLevel = db.prepare(`
+  INSERT INTO levels (id, name, life, circle_despawn_time, seed) VALUES (@id, @name, @life, @circleDespawnTime, @seed)
+  ON CONFLICT(id) DO UPDATE SET name = excluded.name, life = excluded.life,
+    circle_despawn_time = excluded.circle_despawn_time, seed = excluded.seed
+`);
+for (const level of LEVELS) upsertLevel.run(level);
+
+const selectLevel = db.prepare(`
+  SELECT id, name, life, circle_despawn_time AS circleDespawnTime, seed
+  FROM levels WHERE id = ?
+`);
+//jusqu'a ici modif
+
 const setMint = db.prepare('UPDATE scores SET mint_status = ?, mint_error = ? WHERE id = ?');
+//ici modif
 const selectOne = db.prepare(`
-  SELECT id, player, score, address, circle_time AS circleTime, created_at AS createdAt,
+  SELECT id, player, score, level_id AS levelId, address, circle_time AS circleTime, created_at AS createdAt,
          tx_hash AS txHash, mint_status AS mintStatus, mint_error AS mintError
   FROM scores WHERE id = ?
 `);
+//jusqu'a ici modif
 
 // API routes
 app.get('/api/health', (_req, res) => {
@@ -117,10 +150,24 @@ app.get('/api/config', (_req, res) => {
   });
 });
 
+//ici modif
+app.get('/api/levels/:id', (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id) || id < 1) return res.status(400).json({ error: 'invalid level id' });
+  const level = selectLevel.get(id);
+  if (!level) return res.status(404).json({ error: 'level_not_found' });
+  return res.json(level);
+});
+//jusqu'a ici modif
+
 app.post('/api/scores', (req, res) => {
   try {
     
-    const { address, score, circleTime, player, txHash, mintError } = req.body || {};
+    //ici modif
+    const { address, score, circleTime, player, txHash, mintError, levelId } = req.body || {};
+    const level = selectLevel.get(levelId === undefined ? 1 : Number(levelId));
+    if (!level) return res.status(400).json({ error: 'level_not_found' });
+    //jusqu'a ici modif
     if (typeof address !== 'string' || !ethers.isAddress(address)) {
       return res.status(400).json({ error: 'address must be a valid wallet address' });
     }
@@ -141,9 +188,11 @@ app.post('/api/scores', (req, res) => {
     else status = 'not_minted';
     const err = !hash && typeof mintError === 'string' ? mintError.slice(0, 200) : null;
     const insert = db.prepare(
-      'INSERT INTO scores (player, score, circle_time, address, tx_hash, mint_status, mint_error) VALUES (?, ?, ?, ?, ?, ?, ?)'
+      //ici modif
+      'INSERT INTO scores (player, score, level_id, circle_time, address, tx_hash, mint_status, mint_error) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
     );
-    const info = insert.run(name, numericScore, JSON.stringify(ct), to, hash, status, err);
+    const info = insert.run(name, numericScore, level.id, JSON.stringify(ct), to, hash, status, err);
+    //jusqu'a ici modif
     if (hash) {
       console.log(`[mint] #${info.lastInsertRowid} ${numericScore} → ${to} tx ${hash}`);
       verifyMint(info.lastInsertRowid, hash, to, numericScore);
@@ -160,12 +209,14 @@ app.post('/api/scores', (req, res) => {
 app.get('/api/scores', (_req, res) => {
   try {
   
+    //ici modif
     const rows = db.prepare(`
-      SELECT id, player, score, address, tx_hash AS txHash, mint_status AS mintStatus, created_at AS createdAt
+      SELECT id, player, score, level_id AS levelId, address, tx_hash AS txHash, mint_status AS mintStatus, created_at AS createdAt
       FROM scores
       ORDER BY score DESC, created_at DESC
       LIMIT 50
     `).all();
+    //jusqu'a ici modif
 
     return res.json(rows);
   } catch (err) {

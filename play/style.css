@@ -181,6 +181,9 @@ input{
 .page-splash { z-index: 10; display: block; }
 .page-game-menu { z-index: 9; display: none; }
 .page-about { z-index: 8; display: none; }
+/* ici modif */
+.page-custom-level { z-index: 8; display: none; }
+/* jusqu'a ici modif */
 .page-high-score { z-index: 7; display: none; }
 .page-tutorial { z-index: 6; display: none; }
 .page-play-delay { z-index: 5; display: none; }
@@ -1058,3 +1061,17 @@ _:-ms-lang(x), #highscoreList {
   text-decoration: underline;
 }
 .mint-link:hover { color: #7BE38B; }
+
+/* ici modif */
+.custom-level-input {
+  display: block;
+  width: 60%;
+  margin: 12px auto;
+  font-size: 1.4em;
+  text-align: center;
+}
+.custom-level-error {
+  min-height: 1.4em;
+  margin-bottom: 12px;
+}
+/* jusqu'a ici modif */

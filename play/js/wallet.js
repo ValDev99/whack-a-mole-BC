@@ -8,7 +8,7 @@ var AMOY_PARAMS = {
   blockExplorerUrls: ["https://amoy.polygonscan.com"]
 };
 
-var TOKEN_ID = "0x3635ff8C6fBE452C4df911b9Ba5Bbe26bf3CA4Da";
+var TOKEN_ID = "0xd52E5f238576019248B14aAde1AAAeA11F6B7eE5";
 var TOKEN_SYMBOL = "MNSC";
 var TOKEN_DECIMALS = 18;
 
@@ -104,11 +104,38 @@ var wallet = {
   // Frappe le score au joueur, 10 MNSC a l'auteur et 5 au leader precedent.
   endGame: async function (score) {
     if (!this.isOnAmoy()) await this.switchToAmoy();
+    //ici modif
+    var fees = await this.gasFees();
     return await window.ethereum.request({
       method: "eth_sendTransaction",
-      params: [{ from: this.address, to: TOKEN_ID, data: encodeEndGame(score) }]
+      params: [{
+        from: this.address,
+        to: TOKEN_ID,
+        data: encodeEndGame(score),
+        maxPriorityFeePerGas: fees.maxPriorityFeePerGas,
+        maxFeePerGas: fees.maxFeePerGas
+      }]
     });
   },
+
+  gasFees: async function () {
+    var eth = window.ethereum;
+    var block = await eth.request({ method: "eth_getBlockByNumber", params: ["latest", false] });
+    var baseFee = BigInt(block.baseFeePerGas || "0x0");
+    var tip = 30000000000n;
+    try {
+      var suggested = BigInt(await eth.request({ method: "eth_maxPriorityFeePerGas" })) * 5n / 4n;
+      if (suggested > tip) tip = suggested;
+    } catch (e) { }
+    try {
+      var gasPrice = BigInt(await eth.request({ method: "eth_gasPrice" }));
+      if (gasPrice - baseFee > tip) tip = (gasPrice - baseFee) * 5n / 4n;
+    } catch (e) { }
+    var maxFee = baseFee * 2n + tip;
+    console.log("gas: base", baseFee / 1000000000n, "gwei, tip", tip / 1000000000n, "gwei, max", maxFee / 1000000000n, "gwei");
+    return { maxPriorityFeePerGas: "0x" + tip.toString(16), maxFeePerGas: "0x" + maxFee.toString(16) };
+  },
+  //jusqu'a ici modif
 
   // Lecture seule, sans transaction
   call: async function (selector) {
