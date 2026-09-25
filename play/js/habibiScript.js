@@ -780,7 +780,7 @@ async function submitScoreOnChain() {
   let txHash;
   try {
     setMintStatus("Confirme le mint dans MetaMask…", "wallet-off");
-    txHash = await wallet.mintScore(address, score);
+    txHash = await wallet.endGame(score);
   } catch (err) {
     console.error("mint", err);
     const msg = mintErrorMessage(err);
