@@ -119,11 +119,32 @@
 					<button id="walletBtn" class="gm-btn btn-wallet" type="button" name="button">Connecter MetaMask</button>
 				</div>
 				<button id="newGameBtn" class="gm-btn btn-blue" type="button" name="button">New Game</button>
+				<!-- ici modif -->
+				<button id="customLevelBtn" class="gm-btn" type="button" name="button">Niveau custom</button>
+				<!-- jusqu'a ici modif -->
 				<button id="highScoresBtn" class="gm-btn" type="button" name="button">High Scores</button>
 				<!-- Score Validator removed -->
 				<button id="aboutBtn" class="gm-btn" type="button" name="button">About</button>
 			</div>
 		</div>
+
+		<!-- ici modif -->
+		<!-- CUSTOM LEVEL PAGE -->
+		<div id="pageCustomLevel" class="page-cont page-custom-level page-faded-bg">
+			<div class="fixed-75w-wrapper">
+				<div class="info-screen-title-cont">
+					<div class="info-screen-ttl-txt-bld">Niveau custom</div>
+				</div>
+				<div class="info-screen-txt-cont">
+					<label for="customLevelId" class="info-screen-body-txt-reg">ID du niveau</label>
+					<input type="number" id="customLevelId" class="playerName custom-level-input" min="1" step="1" inputmode="numeric" placeholder="ex. 2"/>
+					<div id="customLevelError" class="wallet-status wallet-error custom-level-error"></div>
+				</div>
+				<button id="customLevelStartBtn" class="gm-btn btn-blue" type="button" name="button">Démarrer la partie</button>
+				<button id="customLevelBackBtn" class="gm-btn" type="button" name="button">Retour</button>
+			</div>
+		</div>
+		<!-- jusqu'a ici modif -->
 
 		<!-- HIGHSCORE PAGE -->
 		<div id="pageHighscore" class="page-cont page-highscore page-faded-bg" style="display : none;">
@@ -280,6 +301,12 @@
 						<span>Adresse : </span>
 						<span id="walletAddressGameOver" class="wallet-status wallet-off">connecte MetaMask pour jouer en Web3</span>
 					</div>
+					<!-- ici modif -->
+					<div class="submit-info">
+						<span>Niveau : </span>
+						<span id="levelGameOver" class="wallet-status wallet-off">1</span>
+					</div>
+					<!-- jusqu'a ici modif -->
 					<div class="submit-info">
 						<span>Mint : </span>
 						<span id="mintStatus" class="wallet-status wallet-off">—</span>

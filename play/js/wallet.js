@@ -8,17 +8,16 @@ var AMOY_PARAMS = {
   blockExplorerUrls: ["https://amoy.polygonscan.com"]
 };
 
-var TOKEN_ID = "0xc97dc948F4e1ced7a0Fc953Bb61Df6c5fCDAA4dd";
+var TOKEN_ID = "0xd52E5f238576019248B14aAde1AAAeA11F6B7eE5";
 var TOKEN_SYMBOL = "MNSC";
 var TOKEN_DECIMALS = 18;
 
-var MINT_SELECTOR = "0x40c10f19";
+// keccak256("endGame(uint256)")[0:4]
+var END_GAME_SELECTOR = "0xd0399bb8";
 
-function encodeMint(recipient, score) {
-  var amount = BigInt(score) * (10n ** BigInt(TOKEN_DECIMALS));
-  var addr = recipient.toLowerCase().replace(/^0x/, "").padStart(64, "0");
-  var amt = amount.toString(16).padStart(64, "0");
-  return MINT_SELECTOR + addr + amt;
+// Le contrat fait lui-même la mise a l'echelle en decimales : on lui passe le score brut.
+function encodeEndGame(score) {
+  return END_GAME_SELECTOR + BigInt(score).toString(16).padStart(64, "0");
 }
 
 function explorerTxUrl(hash) {
@@ -102,22 +101,60 @@ var wallet = {
     renderWallet();
   },
 
-  mintScore: async function (recipient, score) {
+  // Frappe le score au joueur, 10 MNSC a l'auteur et 5 au leader precedent.
+  endGame: async function (score) {
     if (!this.isOnAmoy()) await this.switchToAmoy();
-    var block = await window.ethereum.request({ method: "eth_getBlockByNumber", params: ["latest", false] });
-    var baseFee = BigInt(block.baseFeePerGas || "0x0");
-    var priorityFee = 30000000000n;
-    var maxFee = baseFee * 2n + priorityFee;
+    //ici modif
+    var fees = await this.gasFees();
     return await window.ethereum.request({
       method: "eth_sendTransaction",
       params: [{
         from: this.address,
         to: TOKEN_ID,
-        data: encodeMint(recipient, score),
-        maxPriorityFeePerGas: "0x" + priorityFee.toString(16),
-        maxFeePerGas: "0x" + maxFee.toString(16)
+        data: encodeEndGame(score),
+        maxPriorityFeePerGas: fees.maxPriorityFeePerGas,
+        maxFeePerGas: fees.maxFeePerGas
       }]
     });
+  },
+
+  gasFees: async function () {
+    var eth = window.ethereum;
+    var block = await eth.request({ method: "eth_getBlockByNumber", params: ["latest", false] });
+    var baseFee = BigInt(block.baseFeePerGas || "0x0");
+    var tip = 30000000000n;
+    try {
+      var suggested = BigInt(await eth.request({ method: "eth_maxPriorityFeePerGas" })) * 5n / 4n;
+      if (suggested > tip) tip = suggested;
+    } catch (e) { }
+    try {
+      var gasPrice = BigInt(await eth.request({ method: "eth_gasPrice" }));
+      if (gasPrice - baseFee > tip) tip = (gasPrice - baseFee) * 5n / 4n;
+    } catch (e) { }
+    var maxFee = baseFee * 2n + tip;
+    console.log("gas: base", baseFee / 1000000000n, "gwei, tip", tip / 1000000000n, "gwei, max", maxFee / 1000000000n, "gwei");
+    return { maxPriorityFeePerGas: "0x" + tip.toString(16), maxFeePerGas: "0x" + maxFee.toString(16) };
+  },
+  //jusqu'a ici modif
+
+  // Lecture seule, sans transaction
+  call: async function (selector) {
+    return await window.ethereum.request({
+      method: "eth_call",
+      params: [{ to: TOKEN_ID, data: selector }, "latest"]
+    });
+  },
+
+  leader: async function () {
+    var r = await this.call("0x40eedabb"); // leader()
+    if (!r || r === "0x") return null;
+    var addr = "0x" + r.slice(-40);
+    return /^0x0{40}$/.test(addr) ? null : addr;
+  },
+
+  highScore: async function () {
+    var r = await this.call("0x1fca5278"); // highScore()
+    return r && r !== "0x" ? Number(BigInt(r)) : 0;
   },
 
   waitForReceipt: async function (txHash) {
